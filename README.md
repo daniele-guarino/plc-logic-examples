@@ -20,23 +20,17 @@ Complete project for a **hydraulic lifting bridge** control system.
 
   ## Ponte Sollevatore — Functional Description
 
-### State Diagram / Grafset
-```mermaid
 stateDiagram-v2
     [*] --> FERMO : Power ON
 
     FERMO --> ABILITATO : KA1=0 AND KA8=0 AND KA9=0 AND KA10=0
     ABILITATO --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
-
-    ABILITATO --> ALIMENTATO : KA2 = 1
-    ALIMENTATO --> ABILITATO : KA2 = 0
-
-    ALIMENTATO --> SALITA : KA3=1 AND Finecorsa_Sup_A=0 AND Finecorsa_Sup_B=0
-    SALITA --> ALIMENTATO : Finecorsa_Superiore_A=1 OR Finecorsa_Superiore_B=1
-
-    ALIMENTATO --> DISCESA : KA4=1 AND Finecorsa_Inf_A=0 AND Finecorsa_Inf_B=0
-    DISCESA --> ALIMENTATO : Finecorsa_Inferiore_A=1 OR Finecorsa_Inferiore_B=1
-
+    ABILITATO --> ALIMENTATO : KA2=1
+    ALIMENTATO --> ABILITATO : KA2=0
+    ALIMENTATO --> SALITA : KA3=1 AND FC_Sup_A=0 AND FC_Sup_B=0
+    SALITA --> ALIMENTATO : FC_Superiore_A=1 OR FC_Superiore_B=1
+    ALIMENTATO --> DISCESA : KA4=1 AND FC_Inf_A=0 AND FC_Inf_B=0
+    DISCESA --> ALIMENTATO : FC_Inferiore_A=1 OR FC_Inferiore_B=1
     SALITA --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
     DISCESA --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
 
