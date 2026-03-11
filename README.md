@@ -9,6 +9,7 @@ Complete project for a **hydraulic lifting bridge** control system.
 - `PG3_Ausiliari_1.pdf` — Control circuit (emergency, start/stop, up/down commands)
 - `PG4_Ausiliari_2.pdf` — Protective device feedback (differential, thermomagnetic)
 - `PG5_IO_PLC.pdf` — PLC I/O mapping
+- 
 
 **Key features:**
 - Dual-layer safety: hardware emergency contactor (KM1) independent from PLC logic
@@ -16,6 +17,41 @@ Complete project for a **hydraulic lifting bridge** control system.
 - Mechanical interlock between UP/DOWN commands
 - Thermomagnetic feedback monitoring (400V and 24V circuits)
 - Full optical signalling for each operational state
+
+  ## Ponte Sollevatore — Functional Description
+
+### State Diagram / Grafset
+```mermaid
+stateDiagram-v2
+    [*] --> FERMO : Power ON
+
+    FERMO --> ABILITATO : KA1=0 AND KA8=0 AND KA9=0 AND KA10=0
+    ABILITATO --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
+
+    ABILITATO --> ALIMENTATO : KA2 = 1
+    ALIMENTATO --> ABILITATO : KA2 = 0
+
+    ALIMENTATO --> SALITA : KA3=1 AND Finecorsa_Sup_A=0 AND Finecorsa_Sup_B=0
+    SALITA --> ALIMENTATO : Finecorsa_Superiore_A=1 OR Finecorsa_Superiore_B=1
+
+    ALIMENTATO --> DISCESA : KA4=1 AND Finecorsa_Inf_A=0 AND Finecorsa_Inf_B=0
+    DISCESA --> ALIMENTATO : Finecorsa_Inferiore_A=1 OR Finecorsa_Inferiore_B=1
+
+    SALITA --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
+    DISCESA --> FERMO : KA1=1 OR KA8=1 OR KA9=1 OR KA10=1
+
+### Functional Logic Description (EN)
+
+1. System at rest — all outputs de-energised.
+2. If KA1=0 AND KA8=0 AND KA9=0 AND KA10=0 → system enabled, HL1=OFF.
+3. If KA2=1 → system powered, HL2=ON.
+4. If KA3=1 → UP command active, HL3=ON, KA4 interlocked (=0).
+5. If UP command active → KA5=1, KA7=1, KA6=0.
+6. If KA4=1 → DOWN command active, HL4=ON, KA3 interlocked (=0).
+7. If DOWN command active → KA6=1, KA7=1, KA5=0.
+8. If Upper end-stop A or B=1 → UP command deactivated.
+9. If Lower end-stop A or B=1 → DOWN command deactivated.
+10. If KA1=1 OR KA8=1 OR KA9=1 OR KA10=1 → system stopped, HL1=ON.
 
 ### 📁 azionamenti-motore/
 Motor drive control examples demonstrating progressive complexity:
